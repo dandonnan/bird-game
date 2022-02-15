@@ -1,5 +1,7 @@
 ﻿namespace BirdGame
 {
+    using BirdGame.Data;
+    using BirdGame.Events;
     using BirdGame.Text;
     using BirdGame.World;
     using Microsoft.Xna.Framework;
@@ -7,6 +9,12 @@
 
     public class MainGame : Game
     {
+        private static MainGame mainGame;
+
+        public const int DefaultWidth = 320;
+
+        public const int DefaultHeight = 240;
+
         private GraphicsDeviceManager graphicsDeviceManager;
         private SpriteBatch spriteBatch;
 
@@ -17,6 +25,13 @@
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
+
+            mainGame = this;
+        }
+
+        public static void QuitGame()
+        {
+            mainGame.Exit();
         }
 
         protected override void Initialize()
@@ -28,9 +43,17 @@
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            worldManager = WorldManager.Initialise(Content, spriteBatch);
+            worldManager = WorldManager.Initialise(Content, graphicsDeviceManager, spriteBatch);
 
             Window.Title = StringLibrary.GetString("GameTitle");
+
+            graphicsDeviceManager.PreferredBackBufferWidth = SaveManager.SaveData.ResolutionWidth;
+            graphicsDeviceManager.PreferredBackBufferHeight = SaveManager.SaveData.ResolutionHeight;
+            graphicsDeviceManager.IsFullScreen = SaveManager.SaveData.Fullscreen;
+            // if fullscreen, use actual screen width and height
+            graphicsDeviceManager.ApplyChanges();
+
+            EventManager.FireEvent(KnownEvents.ResolutionChanged);
         }
 
         protected override void Update(GameTime gameTime)

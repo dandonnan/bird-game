@@ -19,7 +19,7 @@
 
         public static EventManager Initialise()
         {
-            EventManager manager = null;
+            EventManager manager = eventManager;
 
             if (eventManager == null)
             {
@@ -38,9 +38,34 @@
             });
         }
 
+        public static void FireEvent(string eventName, object eventData)
+        {
+            eventManager.events.Add(new GameEvent
+            {
+                Event = eventName,
+                TimeFired = DateTime.Now,
+                EventData = eventData
+            });
+        }
+
         public static bool EventFired(string eventName)
         {
             return eventManager.events.Any(e => e.Event == eventName);
+        }
+
+        public static object GetEventObject(string eventName)
+        {
+            object eventObject = null;
+
+            GameEvent gameEvent = eventManager.events.FirstOrDefault(e => e.Event == eventName);
+
+            if (gameEvent != null)
+            {
+                eventObject = gameEvent.EventData;
+                eventManager.events.Remove(gameEvent);
+            }
+
+            return eventObject;
         }
 
         public void Update()

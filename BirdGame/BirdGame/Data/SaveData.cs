@@ -1,55 +1,32 @@
 ﻿namespace BirdGame.Data
 {
-    using System.IO;
-
     internal class SaveData
     {
-        private const string Filename = "wings";
+        public const int MinVolume = 0;
 
-        public int HighScore;
+        public const int MaxVolume = 10;
 
-        public static void Save(SaveData data)
+        public int HighScore { get; set; }
+
+        public int SoundEffectsVolume { get; set; }
+
+        public string Resolution { get; set; }
+
+        public bool Fullscreen { get; set; }
+
+        public string Language { get; set; }
+
+        public SaveData()
         {
-            try
-            {
-                using (StreamWriter streamWriter = new StreamWriter(Filename))
-                {
-                    streamWriter.Write(data.HighScore);
-                }
-            }
-            catch
-            {
-                // Don't bother exception handling, it's only a small game
-                // and this is likely to be an edge-case anyway
-            }
+            HighScore = 0;
+            SoundEffectsVolume = 7;
+            Resolution = $"{MainGame.DefaultWidth}x{MainGame.DefaultHeight}";
+            Fullscreen = false;
+            Language = "English";
         }
 
-        public static SaveData Load()
-        {
-            SaveData saveData = new SaveData();
+        public int ResolutionWidth => int.Parse(Resolution.Substring(0, Resolution.IndexOf("x")));
 
-            if (File.Exists(Filename))
-            {
-                try
-                {
-                    using (StreamReader streamReader = new StreamReader(Filename))
-                    {
-                        string firstLine = streamReader.ReadLine();
-
-                        if (int.TryParse(firstLine, out int score))
-                        {
-                            saveData.HighScore = score;
-                        }
-                    }
-                }
-                catch
-                {
-                    // Don't bother exception handling, it's only a small game
-                    // and this is likely to be an edge-case anyway
-                }
-            }
-
-            return saveData;
-        }
+        public int ResolutionHeight => int.Parse(Resolution.Substring(Resolution.IndexOf("x") + 1));
     }
 }

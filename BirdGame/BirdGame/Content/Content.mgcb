@@ -65,3 +65,33 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/NewHighScore.spritefont
 
+#begin Sounds/wing_flap1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/wing_flap1.wav
+
+#begin Sounds/wing_flap2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/wing_flap2.wav
+
+#begin Sounds/seaside_ambience.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/seaside_ambience.wav
+
+#begin Sounds/splat.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/splat.wav
+
+#begin Sounds/poop.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/poop.wav
+

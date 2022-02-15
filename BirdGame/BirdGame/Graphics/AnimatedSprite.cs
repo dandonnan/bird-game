@@ -11,11 +11,11 @@
     {
         private readonly List<Frame> frames;
 
+        private readonly bool looping;
+
+        private readonly double frameSpeed = 100;
+
         private int currentFrame;
-
-        private bool looping;
-
-        private double frameSpeed = 100;
 
         private double timeSinceLastFrame;
 
@@ -32,6 +32,10 @@
             currentFrame = 0;
             this.looping = looping;
         }
+
+        public int CurrentFrame => currentFrame;
+
+        public int LastFrame => frames.Count - 1;
 
         public bool IsAnimationAtEnd()
         {
@@ -71,7 +75,7 @@
                     timeSinceLastFrame = 0;
                     currentFrame++;
 
-                    if (currentFrame >= frames.Count - 1)
+                    if (currentFrame >= frames.Count)
                     {
                         if (looping == false)
                         {

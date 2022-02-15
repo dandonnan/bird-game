@@ -1,5 +1,7 @@
 ﻿namespace BirdGame.World
 {
+    using BirdGame.Audio;
+    using BirdGame.Data;
     using BirdGame.Events;
     using BirdGame.Graphics;
     using BirdGame.Input;
@@ -14,6 +16,8 @@
 
         private readonly ContentManager contentManager;
 
+        private readonly GraphicsDeviceManager graphicsDeviceManager;
+
         private readonly SpriteBatch spriteBatch;
 
         private readonly EventManager eventManager;
@@ -22,9 +26,10 @@
 
         private readonly GameWorld gameWorld;
 
-        private WorldManager(ContentManager contentManager, SpriteBatch spriteBatch)
+        private WorldManager(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager, SpriteBatch spriteBatch)
         {
             this.contentManager = contentManager;
+            this.graphicsDeviceManager = graphicsDeviceManager;
             this.spriteBatch = spriteBatch;
 
             worldManager = this;
@@ -34,16 +39,21 @@
 
             SpriteLibrary.Initialise();
             StringLibrary.Initialise();
+            AudioLibrary.Initialise();
+            AudioManager.Initialise();
+            SaveManager.Initialise();
 
             gameWorld = new GameWorld();
         }
 
-        public static WorldManager Initialise(ContentManager contentManager, SpriteBatch spriteBatch)
+        public static WorldManager Initialise(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager, SpriteBatch spriteBatch)
         {
-            return new WorldManager(contentManager, spriteBatch);
+            return new WorldManager(contentManager, graphicsDeviceManager, spriteBatch);
         }
 
         public static SpriteBatch SpriteBatch => worldManager.spriteBatch;
+
+        public static GraphicsDeviceManager GraphicsDeviceManager => worldManager.graphicsDeviceManager;
 
         public static ContentManager ContentManager => worldManager.contentManager;
 
@@ -58,11 +68,7 @@
 
         public void Draw()
         {
-            spriteBatch.Begin();
-
             gameWorld.Draw();
-
-            spriteBatch.End();
         }
     }
 }

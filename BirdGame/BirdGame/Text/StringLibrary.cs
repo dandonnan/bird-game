@@ -34,15 +34,8 @@
             return value;
         }
 
-        public static void ChangeLanguage(string language)
-        {
-            // TODO: change
-            stringLibrary.stringDictionary = new Dictionary<string, string>();
-        }
-
         private Dictionary<string, string> PopulateDictionary()
         {
-            // TODO: populate from file
             return DefaultStrings.Strings.ToDictionary(d => d.Key, d => d.Value);
         }
     }

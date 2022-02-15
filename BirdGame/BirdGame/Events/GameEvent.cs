@@ -7,5 +7,7 @@
         public string Event { get; set; }
 
         public DateTime TimeFired { get; set; }
+
+        public object EventData { get; set; }
     }
 }

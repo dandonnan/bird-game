@@ -203,6 +203,20 @@
                         new Frame(1, 1, 48),
                         new Frame(50, 1, 48),
                     })
+                },
+                {
+                    "BirdPoop",
+                    new AnimatedSprite(birdTexture, new List<Frame>
+                    {
+                        new Frame(1, 50, 48),
+                        new Frame(50, 50, 48),
+                        new Frame(99, 50, 48),
+                        new Frame(99, 50, 48),
+                        new Frame(99, 50, 48),
+                        new Frame(50, 50, 48),
+                        new Frame(1, 50, 48),
+                    },
+                    false)
                 }
             };
 

@@ -1,14 +1,19 @@
 ﻿namespace BirdGame.Characters
 {
+    using BirdGame.Audio;
     using BirdGame.Enums;
     using BirdGame.Graphics;
     using BirdGame.Input;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Audio;
     using System;
+    using System.Collections.Generic;
 
     internal class Bird : AbstractCharacter
     {
         private const float rotateSpeed = 0.025f;
+
+        private readonly List<SoundEffect> flappingSounds;
 
         private BirdState state;
 
@@ -28,6 +33,8 @@
 
         private bool canMove;
 
+        private bool flapped;
+
         public Bird()
         {
             // TODO: call Reset once all anims are in
@@ -36,17 +43,27 @@
 
             // TODO: get sprites
             flyingSprite = SpriteLibrary.GetAnimatedSprite("BirdFly");
+            poopingSprite = SpriteLibrary.GetAnimatedSprite("BirdPoop");
+
+            flappingSounds = new List<SoundEffect>
+            {
+                AudioLibrary.GetSoundEffect("WingsFlap1"),
+                AudioLibrary.GetSoundEffect("WingsFlap2")
+            };
 
             SetOrigin();
 
             SetPosition(new Vector2(-50, 300));
         }
 
+        public Vector2 Position => position;
+
         public void Reset()
         {
             ResetAllAnimations();
             state = BirdState.Spawning;
             canMove = false;
+            flapped = false;
         }
 
         public void AllowMovement(bool movement)
@@ -124,6 +141,7 @@
             Vector2 origin = new Vector2(flyingSprite.GetWidth() / 2, flyingSprite.GetHeight() / 2);
 
             flyingSprite.SetOrigin(origin);
+            poopingSprite.SetOrigin(origin);
             // todo: set more origins
         }
 
@@ -132,6 +150,7 @@
             this.rotation = rotation;
 
             flyingSprite.SetRotation(rotation);
+            poopingSprite.SetRotation(rotation);
             // todo: set more rotations
         }
 
@@ -140,6 +159,7 @@
             this.position = position;
 
             flyingSprite.SetPosition(position);
+            poopingSprite.SetPosition(position);
             // todo: set more positions;
         }
 
@@ -155,6 +175,8 @@
             Move();
 
             flyingSprite.Update(gameTime);
+
+            PlaySounds();
 
             if (InputManager.IsBindingPressed(DefaultBindings.Left) || InputManager.IsBindingHeld(DefaultBindings.Left))
             {
@@ -175,6 +197,27 @@
             {
                 SwapToState(BirdState.Pooping);
             }
+        }
+
+        private void PlaySounds()
+        {
+            if (flyingSprite.CurrentFrame == flyingSprite.LastFrame && flapped == false)
+            {
+                PlayFlappingSound();
+            }
+            else if (flapped && flyingSprite.CurrentFrame != flyingSprite.LastFrame)
+            {
+                flapped = false;
+            }
+        }
+
+        private void PlayFlappingSound()
+        {
+            int index = new Random().Next(0, flappingSounds.Count);
+
+            AudioManager.PlaySoundEffect(flappingSounds[index]);
+
+            flapped = true;
         }
 
         private void Move()
@@ -201,7 +244,9 @@
 
         private void PoopUpdate(GameTime gameTime)
         {
-            SwapToStateOnAnimationEnd(poopingSprite, BirdState.Flying);
+            poopingSprite.Update(gameTime);
+
+            SwapToStateOnAnimationEnd(poopingSprite, BirdState.Flying, "Poop");
         }
 
         private void DeadUpdate(GameTime gameTime)
@@ -212,10 +257,10 @@
         private void ResetAllAnimations()
         {
             flyingSprite.Reset();
-            divingDownSprite.Reset();
-            divingUpSprite.Reset();
+            //divingDownSprite.Reset();
+            //divingUpSprite.Reset();
             poopingSprite.Reset();
-            deadSprite.Reset();
+            //deadSprite.Reset();
         }
 
         private void SwapToState(BirdState newState)
@@ -224,11 +269,16 @@
             ResetAllAnimations();
         }
 
-        private void SwapToStateOnAnimationEnd(AnimatedSprite sprite, BirdState newState)
+        private void SwapToStateOnAnimationEnd(AnimatedSprite sprite, BirdState newState, string soundEffectId = null)
         {
             if (sprite.IsAnimationAtEnd())
             {
                 SwapToState(newState);
+
+                if (string.IsNullOrEmpty(soundEffectId) == false)
+                {
+                    AudioManager.PlaySoundEffect(soundEffectId);
+                }
             }
         }
     }

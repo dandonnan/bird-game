@@ -6,14 +6,16 @@
     {
         public static Dictionary<string, string> Strings = new Dictionary<string, string>
         {
-            { "Language", "English" },
             { "GameTitle", "Bird Game"},
             { "Copyright", "Copyright © 2022 Dan Donnan"},
             { "NewScore", "New High Score"},
             { "PersonalBest", "Personal Best: {0}"},
             { "SoundEffects", "Sound Effects"},
-            { "Music", "Music Volume"},
-            { "ChangeLanguage", "Language"},
+            { "Resolution", "Resolution"},
+            { "Fullscreen", "Fullscreen"},
+            { "Yes", "Yes"},
+            { "No", "No"},
+            { "Quit", "Quit Game" },
             { "PoopHead", "Shampoo"},
             { "PoopJacket", "Designer Label"},
             { "PoopCoffee", "Crapuccino"},
