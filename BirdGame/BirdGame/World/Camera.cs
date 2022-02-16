@@ -31,6 +31,8 @@
 
             scale = 1;
             speed = 1.25f;
+
+            position = new Vector2(300, 640);
         }
 
         public void UpdateViewport()
@@ -65,6 +67,25 @@
             {
                 followTarget = true;
             }
+        }
+
+        public bool CharacterInCameraBounds(AbstractCharacter character)
+        {
+            bool inBounds = true;
+
+            if (character.Position.X + character.GetWidth() < position.X - origin.X ||
+                character.Position.X - character.Origin.X > position.X + origin.X)
+            {
+                inBounds = false;
+            }
+
+            if (character.Position.Y + character.GetHeight() < position.Y - origin.Y ||
+                character.Position.Y - character.Origin.Y > position.Y + origin.Y)
+            {
+                inBounds = false;
+            }
+
+            return inBounds;
         }
     }
 }

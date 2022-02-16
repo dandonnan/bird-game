@@ -40,7 +40,11 @@
                 { "WingsFlap1", WorldManager.ContentManager.Load<SoundEffect>("Sounds//wing_flap1") },
                 { "WingsFlap2", WorldManager.ContentManager.Load<SoundEffect>("Sounds//wing_flap2") },
                 { "Poop", WorldManager.ContentManager.Load<SoundEffect>("Sounds//poop") },
-                { "Splat", WorldManager.ContentManager.Load<SoundEffect>("Sounds//splat") }
+                { "Splat", WorldManager.ContentManager.Load<SoundEffect>("Sounds//splat") },
+                { "Dive", WorldManager.ContentManager.Load<SoundEffect>("Sounds//diving") },
+                { "DroneEnter", WorldManager.ContentManager.Load<SoundEffect>("Sounds//drone_enter") },
+                { "DroneFly", WorldManager.ContentManager.Load<SoundEffect>("Sounds//drone_idle") },
+                { "DroneLeave", WorldManager.ContentManager.Load<SoundEffect>("Sounds//drone_exit") }
             };
         }
     }

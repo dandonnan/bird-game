@@ -13,6 +13,8 @@
 
     internal class GameWorld
     {
+        public static Rectangle WorldBounds = new Rectangle(96, 96, 928, 928);
+
         private readonly IntroText introText;
 
         private readonly ScoreCounter scoreCounter;
@@ -24,6 +26,10 @@
         private readonly PauseScreen pauseScreen;
 
         private readonly Camera camera;
+
+        private readonly Texture2D town;
+
+        private readonly Vector2 townPosition;
 
         private ScoreScreen scoreScreen;
 
@@ -45,8 +51,18 @@
 
             pauseScreen = new PauseScreen();
 
+            town = WorldManager.ContentManager.Load<Texture2D>("Sprites\\town");
+
+            townPosition = new Vector2(-128, -128);
+
             AudioManager.PlayLoopingSoundEffect("Ambience");
+
+            characters.Add(new Drone(new Vector2(600, 300)));
         }
+
+        public Camera Camera => camera;
+
+        public Bird Bird => bird;
 
         public void Update(GameTime gameTime)
         {
@@ -160,7 +176,7 @@
 
         private void DrawWorld()
         {
-            // TODO: tiles
+            WorldManager.SpriteBatch.Draw(town, townPosition, Color.White);
 
             foreach (AbstractCharacter character in characters)
             {

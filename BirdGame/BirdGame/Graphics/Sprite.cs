@@ -15,6 +15,15 @@
             this.frame = frame;
         }
 
+        public Sprite(Sprite sprite)
+        {
+            this.texture = sprite.texture;
+            this.frame = new Frame(frame.Rectangle.X, frame.Rectangle.Y, frame.Rectangle.Width, frame.Rectangle.Height);
+            this.rotation = sprite.rotation;
+            this.scale = sprite.scale;
+            this.origin = sprite.origin;
+        }
+
         public override int GetWidth()
         {
             return frame.Rectangle.Width;

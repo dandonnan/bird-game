@@ -12,8 +12,6 @@
 
         private bool hasItem;
 
-        private Vector2 position;
-
         private float rotation;
 
         public RoamingCharacter()
@@ -22,6 +20,16 @@
 
             walkSprite = SpriteLibrary.GetAnimatedSprite($"NPC{id}");
             walkWithItemSprite = SpriteLibrary.GetAnimatedSprite($"NPC{id}_Carry");
+        }
+
+        public override int GetWidth()
+        {
+            return walkSprite.GetWidth();
+        }
+
+        public override int GetHeight()
+        {
+            return walkSprite.GetHeight();
         }
 
         public override void Update(GameTime gameTime)

@@ -82,7 +82,7 @@
             if (finished == false)
             {
                 WorldManager.SpriteBatch.DrawString(titleFont, gameTitle, titlePosition, Color.White);
-                WorldManager.SpriteBatch.DrawString(copyrightFont, copyright, copyrightPosition, Color.White);
+                WorldManager.SpriteBatch.DrawString(copyrightFont, copyright, copyrightPosition, Color.CornflowerBlue);
             }
         }
 

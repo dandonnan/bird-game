@@ -55,6 +55,17 @@
             }
         }
 
+        public static void StopLoopingSoundEffect(string id)
+        {
+            audioManager.loopingSounds.TryGetValue(id, out SoundEffectInstance instance);
+
+            if (instance != null)
+            {
+                instance.Stop();
+                audioManager.loopingSounds.Remove(id);
+            }
+        }
+
         public static void ChangeVolume()
         {
             foreach (SoundEffectInstance sound in audioManager.loopingSounds.Values)

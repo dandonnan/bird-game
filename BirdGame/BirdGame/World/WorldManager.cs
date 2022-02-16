@@ -57,6 +57,8 @@
 
         public static ContentManager ContentManager => worldManager.contentManager;
 
+        public static GameWorld GameWorld => worldManager.gameWorld;
+
         public void Update(GameTime gameTime)
         {
             inputManager.Update();

@@ -10,10 +10,15 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Authors>Dan Donnan</Authors>
     <Copyright>2022 Dan Donnan.</Copyright>
+    <DebugType>embedded</DebugType>
+    <Product>Bird Game</Product>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

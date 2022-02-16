@@ -17,7 +17,7 @@
 
         private readonly SpriteFont font;
 
-        private readonly Vector2 scorePosition;
+        private Vector2 scorePosition;
 
         private int targetScore;
 
@@ -77,6 +77,27 @@
             if (displayScore < targetScore)
             {
                 displayScore++;
+
+                if (displayScore < 100)
+                {
+                    scorePosition.X = 290;
+                }
+                else if (displayScore < 1000)
+                {
+                    scorePosition.X = 280;
+                }
+                else if (displayScore < 10000)
+                {
+                    scorePosition.X = 270;
+                }
+                else if (displayScore < 100000)
+                {
+                    scorePosition.X = 260;
+                }
+                else
+                {
+                    scorePosition.X = 250;
+                }
             }
 
             foreach (ScorePopup score in scorePopups)

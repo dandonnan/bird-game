@@ -4,14 +4,19 @@
     using BirdGame.Enums;
     using BirdGame.Graphics;
     using BirdGame.Input;
+    using BirdGame.World;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Audio;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Reflection.Metadata.Ecma335;
 
     internal class Bird : AbstractCharacter
     {
         private const float rotateSpeed = 0.025f;
+
+        private const float turnAroundPositionOffset = 20;
 
         private readonly List<SoundEffect> flappingSounds;
 
@@ -27,23 +32,27 @@
 
         private AnimatedSprite deadSprite;
 
-        private Vector2 position;
-
         private float rotation;
 
         private bool canMove;
 
         private bool flapped;
 
+        private bool turningAround;
+
+        private float targetRotation;
+
+        private Vector2 targetPosition;
+
         public Bird()
         {
-            // TODO: call Reset once all anims are in
-            state = BirdState.Spawning;
-            canMove = false;
-
-            // TODO: get sprites
             flyingSprite = SpriteLibrary.GetAnimatedSprite("BirdFly");
+            divingDownSprite = SpriteLibrary.GetAnimatedSprite("BirdDiveDown");
+            divingUpSprite = SpriteLibrary.GetAnimatedSprite("BirdDiveUp");
             poopingSprite = SpriteLibrary.GetAnimatedSprite("BirdPoop");
+            deadSprite = SpriteLibrary.GetAnimatedSprite("BirdDead");
+
+            Reset();
 
             flappingSounds = new List<SoundEffect>
             {
@@ -53,10 +62,8 @@
 
             SetOrigin();
 
-            SetPosition(new Vector2(-50, 300));
+            SetPosition(new Vector2(96, 640));
         }
-
-        public Vector2 Position => position;
 
         public void Reset()
         {
@@ -64,6 +71,9 @@
             state = BirdState.Spawning;
             canMove = false;
             flapped = false;
+            turningAround = true;
+            targetRotation = 0;
+            targetPosition = new Vector2(200, 0);
         }
 
         public void AllowMovement(bool movement)
@@ -77,6 +87,16 @@
             {
                 state = BirdState.Flying;
             }
+        }
+
+        public override int GetWidth()
+        {
+            return flyingSprite.GetWidth();
+        }
+
+        public override int GetHeight()
+        {
+            return flyingSprite.GetHeight();
         }
 
         public override void Update(GameTime gameTime)
@@ -138,11 +158,13 @@
 
         private void SetOrigin()
         {
-            Vector2 origin = new Vector2(flyingSprite.GetWidth() / 2, flyingSprite.GetHeight() / 2);
+            origin = new Vector2(flyingSprite.GetWidth() / 2, flyingSprite.GetHeight() / 2);
 
             flyingSprite.SetOrigin(origin);
+            divingDownSprite.SetOrigin(origin);
+            divingUpSprite.SetOrigin(origin);
             poopingSprite.SetOrigin(origin);
-            // todo: set more origins
+            deadSprite.SetOrigin(origin);
         }
 
         private void SetRotation(float rotation)
@@ -150,8 +172,10 @@
             this.rotation = rotation;
 
             flyingSprite.SetRotation(rotation);
+            divingDownSprite.SetRotation(rotation);
+            divingUpSprite.SetRotation(rotation);
             poopingSprite.SetRotation(rotation);
-            // todo: set more rotations
+            deadSprite.SetRotation(rotation);
         }
 
         private void SetPosition(Vector2 position)
@@ -159,8 +183,10 @@
             this.position = position;
 
             flyingSprite.SetPosition(position);
+            divingDownSprite.SetPosition(position);
+            divingUpSprite.SetPosition(position);
             poopingSprite.SetPosition(position);
-            // todo: set more positions;
+            deadSprite.SetPosition(position);
         }
 
         private void SpawnUpdate(GameTime gameTime)
@@ -178,24 +204,34 @@
 
             PlaySounds();
 
-            if (InputManager.IsBindingPressed(DefaultBindings.Left) || InputManager.IsBindingHeld(DefaultBindings.Left))
+            if (turningAround == false)
             {
-                SetRotation(rotation - rotateSpeed);
-            }
+                CheckIfOutOfBounds();
 
-            if (InputManager.IsBindingPressed(DefaultBindings.Right) || InputManager.IsBindingHeld(DefaultBindings.Right))
-            {
-                SetRotation(rotation + rotateSpeed);
-            }
+                if (InputManager.IsBindingPressed(DefaultBindings.Left) || InputManager.IsBindingHeld(DefaultBindings.Left))
+                {
+                    SetRotation(rotation - rotateSpeed);
+                }
 
-            if (InputManager.IsBindingPressed(DefaultBindings.Dive))
-            {
-                SwapToState(BirdState.DivingDown);
-            }
+                if (InputManager.IsBindingPressed(DefaultBindings.Right) || InputManager.IsBindingHeld(DefaultBindings.Right))
+                {
+                    SetRotation(rotation + rotateSpeed);
+                }
 
-            if (InputManager.IsBindingPressed(DefaultBindings.Poop))
+                if (InputManager.IsBindingPressed(DefaultBindings.Dive))
+                {
+                    AudioManager.PlaySoundEffect("Dive");
+                    SwapToState(BirdState.DivingDown);
+                }
+
+                if (InputManager.IsBindingPressed(DefaultBindings.Poop))
+                {
+                    SwapToState(BirdState.Pooping);
+                }
+            }
+            else
             {
-                SwapToState(BirdState.Pooping);
+                TurnAround();
             }
         }
 
@@ -219,6 +255,72 @@
 
             flapped = true;
         }
+        
+        private void CheckIfOutOfBounds()
+        {
+            if (position.X < GameWorld.WorldBounds.X)
+            {
+                turningAround = true;
+                targetRotation = rotation + (float)Math.PI;
+                targetPosition = new Vector2(position.X + turnAroundPositionOffset, 0);
+            }
+            else if (position.Y < GameWorld.WorldBounds.Y)
+            {
+                turningAround = true;
+                targetRotation = rotation + (float)Math.PI;
+                targetPosition = new Vector2(0, position.Y + turnAroundPositionOffset);
+            }
+            else if (position.X > GameWorld.WorldBounds.Width)
+            {
+                turningAround = true;
+                targetRotation = rotation - (float)Math.PI;
+                targetPosition = new Vector2(position.X - turnAroundPositionOffset, 0);
+            }
+            else if (position.Y > GameWorld.WorldBounds.Height)
+            {
+                turningAround = true;
+                targetRotation = rotation - (float)Math.PI;
+                targetPosition = new Vector2(0, position.Y - turnAroundPositionOffset);
+            }
+        }
+
+        private void TurnAround()
+        {
+            if (rotation > targetRotation - rotateSpeed
+                && rotation < targetRotation + rotateSpeed)
+            {
+                int positionOffset = 4;
+
+                if (targetPosition.X != 0 && position.X < targetPosition.X - (turnAroundPositionOffset / positionOffset))
+                {
+                    position.X++;
+                }
+                else if (targetPosition.X != 0 && position.X > targetPosition.X + (turnAroundPositionOffset / positionOffset))
+                {
+                    position.X--;
+                }
+                else if (targetPosition.Y != 0 && position.Y < targetPosition.Y - (turnAroundPositionOffset / positionOffset))
+                {
+                    position.Y++;
+                }
+                else if (targetPosition.Y != 0 && position.Y > targetPosition.Y + (turnAroundPositionOffset / positionOffset))
+                {
+                    position.Y--;
+                }
+                else
+                {
+                    turningAround = false;
+                }
+            }
+            else if (rotation < targetRotation)
+            {
+                SetRotation(rotation + rotateSpeed);
+            }
+            else if (rotation > targetRotation)
+            {
+                SetRotation(rotation - rotateSpeed);
+            }
+        }
 
         private void Move()
         {
@@ -234,11 +336,15 @@
 
         private void DiveDownUpdate(GameTime gameTime)
         {
+            divingDownSprite.Update(gameTime);
+
             SwapToStateOnAnimationEnd(divingDownSprite, BirdState.DivingUp);
         }
 
         private void DiveUpUpdate(GameTime gameTime)
         {
+            divingUpSprite.Update(gameTime);
+
             SwapToStateOnAnimationEnd(divingUpSprite, BirdState.Flying);
         }
 
@@ -251,16 +357,16 @@
 
         private void DeadUpdate(GameTime gameTime)
         {
-
+            deadSprite.Update(gameTime);
         }
 
         private void ResetAllAnimations()
         {
             flyingSprite.Reset();
-            //divingDownSprite.Reset();
-            //divingUpSprite.Reset();
+            divingDownSprite.Reset();
+            divingUpSprite.Reset();
             poopingSprite.Reset();
-            //deadSprite.Reset();
+            deadSprite.Reset();
         }
 
         private void SwapToState(BirdState newState)

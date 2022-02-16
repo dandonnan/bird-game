@@ -12,6 +12,16 @@
 
         }
 
+        public override int GetWidth()
+        {
+            return idleAnimation.GetWidth();
+        }
+
+        public override int GetHeight()
+        {
+            return idleAnimation.GetHeight();
+        }
+
         public override void Update(GameTime gameTime)
         {
         }

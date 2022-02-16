@@ -33,6 +33,17 @@
             this.looping = looping;
         }
 
+        public AnimatedSprite(AnimatedSprite sprite)
+        {
+            this.texture = sprite.texture;
+            this.frames = new List<Frame>(sprite.frames);
+            currentFrame = 0;
+            this.looping = sprite.looping;
+            this.rotation = sprite.rotation;
+            this.scale = sprite.scale;
+            this.origin = sprite.origin;
+        }
+
         public int CurrentFrame => currentFrame;
 
         public int LastFrame => frames.Count - 1;
