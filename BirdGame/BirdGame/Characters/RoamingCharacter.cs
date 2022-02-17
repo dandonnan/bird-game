@@ -156,12 +156,13 @@
             Vector2 direction = nodes[currentNode].Position - position;
             direction.Normalize();
 
-            rotation = (float)Math.Atan2(-direction.X, direction.Y) + 90;
+            rotation = (float)Math.Atan2(-direction.X, direction.Y) - 90;
 
             position += direction * movementSpeed;
 
             if (hasItem)
             {
+                heldItem.SetPosition(position);
                 walkWithItemSprite.SetPosition(position);
                 walkWithItemSprite.SetRotation(rotation);
             }

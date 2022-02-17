@@ -46,6 +46,8 @@
 
         private int maxDronesAllowed;
 
+        private Matrix uiMatrix;
+
         public GameWorld()
         {
             state = WorldState.Title;
@@ -75,6 +77,8 @@
 
             maxDronesAllowed = 0;
             dronesActive = 0;
+
+            UpdateUiMatrix();
         }
 
         public Camera Camera => camera;
@@ -83,6 +87,11 @@
 
         public void Update(GameTime gameTime)
         {
+            if (EventManager.EventFired(KnownEvents.ResolutionChanged))
+            {
+                UpdateUiMatrix();
+            }
+
             switch (state)
             {
                 case WorldState.Title:
@@ -94,7 +103,7 @@
                     break;
 
                 case WorldState.Paused:
-                    UpdatePaused();
+                    UpdatePaused(gameTime);
                     break;
 
                 case WorldState.Score:
@@ -105,14 +114,14 @@
 
         public void Draw()
         {
-            WorldManager.SpriteBatch.Begin(SpriteSortMode.Deferred, transformMatrix: camera.Transform);
+            WorldManager.SpriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: camera.Transform);
 
             DrawWorld();
             bird.Draw();
 
             WorldManager.SpriteBatch.End();
 
-            WorldManager.SpriteBatch.Begin();
+            WorldManager.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: uiMatrix);
 
             switch (state)
             {
@@ -201,9 +210,10 @@
             camera.Update(gameTime);
         }
 
-        private void UpdatePaused()
+        private void UpdatePaused(GameTime gameTime)
         {
             pauseScreen.Update();
+            camera.Update(gameTime);
 
             if (InputManager.IsBindingPressed(DefaultBindings.Pause))
             {
@@ -397,6 +407,22 @@
             foreach (Poop poop in poops)
             {
                 poop.Draw();
+            }
+        }
+
+        private void UpdateUiMatrix()
+        {
+            if (SaveManager.SaveData.Fullscreen == false)
+            {
+                uiMatrix = Matrix.CreateScale(SaveManager.SaveData.ResolutionWidth / MainGame.DefaultWidth,
+                                          SaveManager.SaveData.ResolutionHeight / MainGame.DefaultHeight,
+                                          1);
+            }
+            else
+            {
+                uiMatrix = Matrix.CreateScale(WorldManager.SpriteBatch.GraphicsDevice.DisplayMode.Width / MainGame.DefaultWidth,
+                                          WorldManager.SpriteBatch.GraphicsDevice.DisplayMode.Height / MainGame.DefaultHeight,
+                                          1);
             }
         }
     }

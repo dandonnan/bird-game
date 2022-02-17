@@ -150,13 +150,13 @@
         private static List<Node> MapNodesToWorldPositions(List<Node> nodes, NodeDirection direction)
         {
             int multiplier = 32;
-            int offset = direction == NodeDirection.North ? 0 : 16;
+            int offset = direction == NodeDirection.North ? 8 : 24;
             string name = direction == NodeDirection.North ? "North" : "South";
 
             foreach (Node node in nodes)
             {
                 node.Id += name;
-                node.Position = new Vector2(((node.Position.X - 1) * multiplier) + offset, (node.Position.Y - 1) * multiplier);
+                node.Position = new Vector2(((node.Position.X - 1) * multiplier) + offset, ((node.Position.Y - 1) * multiplier) + offset);
             }
 
             return nodes;

@@ -47,10 +47,19 @@
 
             Window.Title = StringLibrary.GetString("GameTitle");
 
-            graphicsDeviceManager.PreferredBackBufferWidth = SaveManager.SaveData.ResolutionWidth;
-            graphicsDeviceManager.PreferredBackBufferHeight = SaveManager.SaveData.ResolutionHeight;
             graphicsDeviceManager.IsFullScreen = SaveManager.SaveData.Fullscreen;
-            // if fullscreen, use actual screen width and height
+
+            if (graphicsDeviceManager.IsFullScreen)
+            {
+                graphicsDeviceManager.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                graphicsDeviceManager.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            }
+            else
+            {
+                graphicsDeviceManager.PreferredBackBufferWidth = SaveManager.SaveData.ResolutionWidth;
+                graphicsDeviceManager.PreferredBackBufferHeight = SaveManager.SaveData.ResolutionHeight;
+            }
+
             graphicsDeviceManager.ApplyChanges();
 
             EventManager.FireEvent(KnownEvents.ResolutionChanged);

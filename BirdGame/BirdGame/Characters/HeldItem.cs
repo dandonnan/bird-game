@@ -2,6 +2,7 @@
 {
     using BirdGame.Enums;
     using BirdGame.Graphics;
+    using Microsoft.Xna.Framework;
 
     internal class HeldItem
     {
@@ -74,6 +75,12 @@
         public void PoopedOn()
         {
             hasPoop = true;
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            itemWithPoopSprite.SetPosition(position);
+            itemSprite.SetPosition(position);
         }
 
         public void Draw()

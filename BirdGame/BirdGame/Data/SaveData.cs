@@ -20,7 +20,7 @@
         {
             HighScore = 0;
             SoundEffectsVolume = 7;
-            Resolution = $"{MainGame.DefaultWidth}x{MainGame.DefaultHeight}";
+            Resolution = $"640x480";
             Fullscreen = false;
             Language = "English";
         }

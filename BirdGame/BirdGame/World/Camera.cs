@@ -14,8 +14,6 @@
 
         private readonly float speed;
 
-        private readonly float scale;
-
         private Vector2 position;
 
         private Vector2 origin;
@@ -24,14 +22,19 @@
 
         private bool followTarget;
 
+        private float scale;
+
+        private float scaleX;
+
+        private float scaleY;
+
         public Camera(Bird bird)
         {
-            UpdateViewport();
-
             target = bird;
             followTarget = false;
 
-            scale = 1;
+            UpdateViewport();
+
             speed = 1.25f;
 
             position = startPosition;
@@ -49,7 +52,12 @@
             float viewportWidth = WorldManager.SpriteBatch.GraphicsDevice.Viewport.Width;
             float viewportHeight = WorldManager.SpriteBatch.GraphicsDevice.Viewport.Height;
 
-            center = new Vector2(viewportWidth / 2, viewportHeight / 2);
+            center = new Vector2((viewportWidth - target.Origin.X) / 2 , (viewportHeight - target.Origin.Y) / 2);
+
+            scaleX = viewportHeight / MainGame.DefaultWidth;
+            scaleY = viewportHeight / MainGame.DefaultHeight;
+
+            scale = scaleX / scaleY;
         }
 
         public void Update(GameTime gameTime)
@@ -60,10 +68,10 @@
             }
 
             Transform = Matrix.Identity * Matrix.CreateTranslation(-position.X, -position.Y, 0)
-                        * Matrix.CreateRotationZ(0) * Matrix.CreateTranslation(origin.X, origin.Y, 0)
-                        * Matrix.CreateScale(new Vector3(scale, scale, scale));
+                        * Matrix.CreateRotationZ(0) * Matrix.CreateTranslation(origin.X / scaleX, origin.Y / scaleY, 0)
+                        * Matrix.CreateScale(new Vector3(scaleX, scaleY, 1));
 
-            origin = center / scale;
+            origin = center;
 
             if (followTarget)
             {

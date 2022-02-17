@@ -136,10 +136,13 @@
 
         private void ChangeResolution()
         {
-            WorldManager.GraphicsDeviceManager.PreferredBackBufferWidth = SaveManager.SaveData.ResolutionWidth;
-            WorldManager.GraphicsDeviceManager.PreferredBackBufferHeight = SaveManager.SaveData.ResolutionHeight;
+            if (SaveManager.SaveData.Fullscreen == false)
+            {
+                WorldManager.GraphicsDeviceManager.PreferredBackBufferWidth = SaveManager.SaveData.ResolutionWidth;
+                WorldManager.GraphicsDeviceManager.PreferredBackBufferHeight = SaveManager.SaveData.ResolutionHeight;
 
-            WorldManager.GraphicsDeviceManager.ApplyChanges();
+                WorldManager.GraphicsDeviceManager.ApplyChanges();
+            }
 
             EventManager.FireEvent(KnownEvents.ResolutionChanged);
         }
@@ -164,7 +167,7 @@
 
         private static readonly List<string> resolutions = new List<string>
         {
-            "320x240", "640x480", "1280x720", "1920x1080"
+            "640x480", "1280x720", "1600x900", "1920x1080"
         };
 
         private static readonly List<string> fullscreenOptions = new List<string>
