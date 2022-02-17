@@ -1,5 +1,6 @@
 ﻿namespace BirdGame.World
 {
+    using BirdGame.AI;
     using BirdGame.Audio;
     using BirdGame.Characters;
     using BirdGame.Data;
@@ -9,11 +10,15 @@
     using BirdGame.UI;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     internal class GameWorld
     {
         public static Rectangle WorldBounds = new Rectangle(96, 96, 928, 928);
+
+        private const int MaximumCharacters = 60;
 
         private readonly IntroText introText;
 
@@ -22,6 +27,8 @@
         private readonly Bird bird;
 
         private readonly List<AbstractCharacter> characters;
+
+        private readonly List<Poop> poops;
 
         private readonly PauseScreen pauseScreen;
 
@@ -35,15 +42,22 @@
 
         private WorldState state;
 
+        private int dronesActive;
+
+        private int maxDronesAllowed;
+
         public GameWorld()
         {
             state = WorldState.Title;
 
             scoreCounter = ScoreCounter.Initialise();
+            NodeNetwork.Initialise();
 
             introText = new IntroText();
 
             characters = new List<AbstractCharacter>();
+
+            poops = new List<Poop>();
 
             bird = new Bird();
 
@@ -57,7 +71,10 @@
 
             AudioManager.PlayLoopingSoundEffect("Ambience");
 
-            characters.Add(new Drone(new Vector2(600, 300)));
+            PopulateWorldWithCharacters();
+
+            maxDronesAllowed = 0;
+            dronesActive = 0;
         }
 
         public Camera Camera => camera;
@@ -80,14 +97,15 @@
                     UpdatePaused();
                     break;
 
-                default:
+                case WorldState.Score:
+                    UpdateScore(gameTime);
                     break;
             }
         }
 
         public void Draw()
         {
-            WorldManager.SpriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: camera.Transform);
+            WorldManager.SpriteBatch.Begin(SpriteSortMode.Deferred, transformMatrix: camera.Transform);
 
             DrawWorld();
             bird.Draw();
@@ -116,6 +134,21 @@
             }
 
             WorldManager.SpriteBatch.End();
+        }
+
+        private void Reset()
+        {
+            camera.Reset();
+            bird.Reset();
+            characters.ForEach(c => c.Kill());
+            characters.Clear();
+            poops.Clear();
+            scoreCounter.Reset();
+            AudioManager.StopLoopingSoundEffect("DroneFly");
+            PopulateWorldWithCharacters();
+            state = WorldState.Playing;
+            maxDronesAllowed = 0;
+            dronesActive = 0;
         }
 
         private void UpdateIntro(GameTime gameTime)
@@ -147,6 +180,19 @@
                 state = WorldState.Paused;
             }
 
+            if (EventManager.EventFired(KnownEvents.BirdDead))
+            {
+                scoreScreen = new ScoreScreen(ScoreCounter.CurrentScore, SaveManager.SaveData.HighScore);
+                SaveManager.SaveData.HighScore = ScoreCounter.CurrentScore;
+                SaveManager.Save();
+                state = WorldState.Score;
+            }
+
+            if (EventManager.EventFiredThenKill(KnownEvents.PoopSpawned))
+            {
+                poops.Add(new Poop(bird.Position));
+            }
+
             scoreCounter.Update();
 
             UpdateWorld(gameTime);
@@ -166,11 +212,176 @@
             }
         }
 
+        private void UpdateScore(GameTime gameTime)
+        {
+            if (InputManager.IsBindingPressed(DefaultBindings.Poop)
+                || InputManager.IsBindingPressed(DefaultBindings.Dive))
+            {
+                Reset();
+            }
+
+            UpdateWorld(gameTime);
+        }
+
         private void UpdateWorld(GameTime gameTime)
         {
+            List<AbstractCharacter> charactersToRemove = new List<AbstractCharacter>();
+            List<Poop> poopsToRemove = new List<Poop>();
+
+            SpawnCharacters();
+
             foreach (AbstractCharacter character in characters)
             {
                 character.Update(gameTime);
+
+                if (character.MinLifetime > 0 && character.Lifetime > character.MinLifetime
+                    && camera.CharacterInCameraBounds(character) == false
+                    && Vector2.Distance(character.Position, bird.Position) > 300)
+                {
+                    charactersToRemove.Add(character);
+                }
+            }
+
+            foreach (Poop poop in poops)
+            {
+                poop.Update(gameTime);
+
+                if (camera.PoopInCameraBounds(poop) == false)
+                {
+                    poopsToRemove.Add(poop);
+                }
+            }
+
+            if (state != WorldState.Score)
+            {
+                foreach (AbstractCharacter character in charactersToRemove)
+                {
+                    character.Kill();
+                    characters.Remove(character);
+                }
+
+                foreach (Poop poop in poopsToRemove)
+                {
+                    poops.Remove(poop);
+                }
+            }
+        }
+
+        private void SpawnCharacters()
+        {
+            if (state != WorldState.Score)
+            {
+                if (characters.Count < MaximumCharacters)
+                {
+                    int characterType = new Random().Next(0, 10);
+
+                    if (characterType <= 2)
+                    {
+                        SpawnStatic();
+                    }
+                    else
+                    {
+                        SpawnRoaming();
+                    }
+                }
+
+                SpawnDrone();
+            }
+        }
+
+        private void SpawnStatic()
+        {
+            List<SpawnPoint> availableSpawns = SpawnPoint.SpawnPoints.Where(s => s.Static
+                                                                            && s.Occupied == false)
+                                                                     .ToList();
+
+            if (availableSpawns.Any())
+            {
+                int index = new Random().Next(0, availableSpawns.Count);
+
+                if (camera.SpawnPointInCameraBounds(availableSpawns[index]) == false)
+                {
+                    availableSpawns[index].Occupy();
+                    characters.Add(new StaticCharacter(availableSpawns[index]));
+                }
+            }
+        }
+
+        private void SpawnRoaming()
+        {
+            List<SpawnPoint> availableSpawns = SpawnPoint.SpawnPoints.Where(s => s.Static == false
+                                                                            && s.Occupied == false)
+                                                                     .ToList();
+
+            if (availableSpawns.Any())
+            {
+                int index = new Random().Next(0, availableSpawns.Count);
+
+                if (camera.SpawnPointInCameraBounds(availableSpawns[index]) == false)
+                {
+                    availableSpawns[index].Occupy();
+                    characters.Add(new RoamingCharacter(availableSpawns[index], NodeNetwork.GetRouteFromSpawnPoint(availableSpawns[index])));
+                }
+            }
+        }
+
+        private void SpawnDrone()
+        {
+            if (dronesActive < maxDronesAllowed)
+            {
+                if (ScoreCounter.CurrentScore > 100 && new Random().Next(0, 100) >= 99)
+                {
+                    List<SpawnPoint> availableSpawns = SpawnPoint.SpawnPoints.Where(s => s.Occupied == false)
+                                                                             .ToList();
+
+                    int index = new Random().Next(0, availableSpawns.Count);
+
+                    if (camera.SpawnPointInCameraBounds(availableSpawns[index]) == false)
+                    {
+                        availableSpawns[index].Occupy();
+                        characters.Add(new Drone(availableSpawns[index]));
+                        dronesActive++;
+                    }
+                }
+            }
+
+            switch (maxDronesAllowed)
+            {
+                case 0:
+                    maxDronesAllowed = ScoreCounter.CurrentScore > 100 ? 1 : 0;
+                    break;
+
+                case 1:
+                    maxDronesAllowed = ScoreCounter.CurrentScore > 500 ? 2 : 1;
+                    break;
+
+                case 2:
+                    maxDronesAllowed = ScoreCounter.CurrentScore > 1000 ? 3 : 2;
+                    break;
+
+                case 3:
+                    maxDronesAllowed = ScoreCounter.CurrentScore > 2000 ? 4 : 3;
+                    break;
+
+                case 4:
+                    maxDronesAllowed = ScoreCounter.CurrentScore > 2500 ? 5 : 4;
+                    break;
+
+                case 5:
+                    maxDronesAllowed = ScoreCounter.CurrentScore > 2750 ? 6 : 5;
+                    break;
+
+                default:
+                    maxDronesAllowed = 0;
+                    break;
+            }
+        }
+
+        private void PopulateWorldWithCharacters()
+        {
+            for (int i=0; i<MaximumCharacters / 2; i++)
+            {
+                SpawnCharacters();
             }
         }
 
@@ -181,6 +392,11 @@
             foreach (AbstractCharacter character in characters)
             {
                 character.Draw();
+            }
+
+            foreach (Poop poop in poops)
+            {
+                poop.Draw();
             }
         }
     }

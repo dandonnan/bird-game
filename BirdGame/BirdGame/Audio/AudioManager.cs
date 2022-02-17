@@ -44,7 +44,7 @@
         {
             SoundEffect soundEffect = AudioLibrary.GetSoundEffect(id);
 
-            if (soundEffect != null)
+            if (soundEffect != null && audioManager.loopingSounds.ContainsKey(id) == false)
             {
                 SoundEffectInstance instance = soundEffect.CreateInstance();
                 instance.IsLooped = true;

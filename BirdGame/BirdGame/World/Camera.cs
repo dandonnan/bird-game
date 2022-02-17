@@ -8,6 +8,8 @@
     {
         public Matrix Transform { get; private set; }
 
+        private static Vector2 startPosition = new Vector2(300, 640);
+
         private readonly Bird target;
 
         private readonly float speed;
@@ -32,7 +34,14 @@
             scale = 1;
             speed = 1.25f;
 
-            position = new Vector2(300, 640);
+            position = startPosition;
+        }
+
+        public Vector2 Position => position;
+
+        public void Reset()
+        {
+            position = startPosition;
         }
 
         public void UpdateViewport()
@@ -60,13 +69,54 @@
             {
                 float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                position.X += (target.Position.X - position.X) * speed * delta;
-                position.Y += (target.Position.Y - position.Y) * speed * delta;
+                if (target.State != Enums.BirdState.Dead)
+                {
+                    position.X += (target.Position.X - position.X) * speed * delta;
+                    position.Y += (target.Position.Y - position.Y) * speed * delta;
+                }
             }
             else if (EventManager.EventFired(KnownEvents.SpawnBird))
             {
                 followTarget = true;
             }
+        }
+
+        public bool PoopInCameraBounds(Poop poop)
+        {
+            bool inBounds = true;
+
+            if (poop.Position.X + 4 < position.X - origin.X ||
+                poop.Position.X - 4 > position.X + origin.X)
+            {
+                inBounds = false;
+            }
+
+            if (poop.Position.Y + 4 < position.Y - origin.Y ||
+                poop.Position.Y - 4 > position.Y + origin.Y)
+            {
+                inBounds = false;
+            }
+
+            return inBounds;
+        }
+
+        public bool SpawnPointInCameraBounds(SpawnPoint spawnPoint)
+        {
+            bool inBounds = true;
+
+            if (spawnPoint.Position.X + 50 < position.X - origin.X ||
+                spawnPoint.Position.X - 50 > position.X + origin.X)
+            {
+                inBounds = false;
+            }
+
+            if (spawnPoint.Position.Y + 50 < position.Y - origin.Y ||
+                spawnPoint.Position.Y - 50 > position.Y + origin.Y)
+            {
+                inBounds = false;
+            }
+
+            return inBounds;
         }
 
         public bool CharacterInCameraBounds(AbstractCharacter character)

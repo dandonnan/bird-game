@@ -38,7 +38,7 @@
 
             if (spriteLibrary.spriteDictionary.TryGetValue(id, out AbstractSprite abstractSprite))
             {
-                sprite = (Sprite)abstractSprite;
+                sprite = new Sprite((Sprite)abstractSprite);
             }
 
             return sprite;
@@ -72,6 +72,8 @@
                 { "ChipsPoop", new Sprite(objectsTexture, new Frame(408, 6, 4)) },
                 { "IceCream", new Sprite(objectsTexture, new Frame(403, 11, 4)) },
                 { "IceCreamPoop", new Sprite(objectsTexture, new Frame(408, 11, 4)) },
+                { "StainPoop", new Sprite(objectsTexture, new Frame(201, 65, 3)) },
+                { "Car", new Sprite(objectsTexture, new Frame(1, 65, 44)) },
                 {
                     "NPC1",
                     new AnimatedSprite(objectsTexture, new List<Frame>
@@ -247,7 +249,12 @@
                     "BirdDead",
                     new AnimatedSprite(birdTexture, new List<Frame>
                     {
-                        new Frame(1, 148, 48)
+                        new Frame(1, 148, 48),
+                        new Frame(50, 148, 48),
+                        new Frame(99, 148, 48),
+                        new Frame(148, 148, 48),
+                        new Frame(197, 148, 48),
+
                     },
                     false)
                 },
@@ -258,6 +265,16 @@
                         new Frame(1, 1, 48),
                         new Frame(50, 1, 48)
                     })
+                },
+                {
+                    "PoopDrop",
+                    new AnimatedSprite(objectsTexture, new List<Frame>
+                    {
+                        new Frame(193, 65, 3),
+                        new Frame(197, 65, 3),
+                        new Frame(201, 65, 3),
+                    },
+                    false)
                 }
             };
 

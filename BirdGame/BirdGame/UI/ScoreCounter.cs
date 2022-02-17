@@ -37,6 +37,8 @@
             scoreCounter = this;
         }
 
+        public static int CurrentScore => scoreCounter.targetScore;
+
         public static ScoreCounter Initialise()
         {
             ScoreCounter counter = scoreCounter;
@@ -49,9 +51,16 @@
             return counter;
         }
 
-        public static void Add(Vector2 position, Target target)
+        public static void Add(Target target)
         {
-            scoreCounter.scorePopups.Add(new ScorePopup(position, target));
+            scoreCounter.scorePopups.Add(new ScorePopup(target));
+        }
+
+        public void Reset()
+        {
+            scorePopups.Clear();
+            targetScore = 0;
+            displayScore = 0;
         }
 
         public void Update()

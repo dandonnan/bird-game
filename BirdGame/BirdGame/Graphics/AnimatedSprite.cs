@@ -13,7 +13,7 @@
 
         private readonly bool looping;
 
-        private readonly double frameSpeed = 100;
+        private double frameSpeed = 100;
 
         private int currentFrame;
 
@@ -60,6 +60,11 @@
             return atEnd;
         }
 
+        public void SetFrameSpeed(float speed)
+        {
+            frameSpeed = speed;
+        }
+
         public void Reset()
         {
             currentFrame = 0;
@@ -104,7 +109,7 @@
         public override void Draw()
         {
             WorldManager.SpriteBatch.Draw(texture, position, frames[currentFrame].Rectangle,
-                Color.White, rotation, origin, scale, SpriteEffects.None, 0);
+                Color.White, rotation, origin, scale, SpriteEffects.None, depth);
         }
     }
 }

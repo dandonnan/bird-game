@@ -19,6 +19,58 @@
             SetupSprites();
         }
 
+        public Target GetDiveTarget()
+        {
+            Target target;
+
+            switch (itemType)
+            {
+                case Item.IceCream:
+                    target = Target.DiveIceCream;
+                    break;
+
+                case Item.Coffee:
+                    target = Target.DiveCoffee;
+                    break;
+
+                case Item.Chips:
+                    target = Target.DiveChips;
+                    break;
+
+                default:
+                    target = Target.DiveIceCream;
+                    break;
+            }
+
+            return target;
+        }
+
+        public Target GetPoopTarget()
+        {
+            Target target;
+
+            switch (itemType)
+            {
+                case Item.IceCream:
+                    target = Target.PoopIceCream;
+                    break;
+
+                case Item.Coffee:
+                    target = Target.PoopCoffee;
+                    break;
+
+                case Item.Chips:
+                    target = Target.PoopChips;
+                    break;
+
+                default:
+                    target = Target.PoopIceCream;
+                    break;
+            }
+
+            return target;
+        }
+
         public void PoopedOn()
         {
             hasPoop = true;

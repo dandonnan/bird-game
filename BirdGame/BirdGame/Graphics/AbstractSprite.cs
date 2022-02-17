@@ -15,9 +15,12 @@
 
         protected Vector2 origin;
 
+        protected int depth;
+
         public AbstractSprite()
         {
             rotation = 0;
+            depth = 0;
             scale = Vector2.One;
             origin = Vector2.Zero;
         }
@@ -57,6 +60,11 @@
         public void SetOrigin(Vector2 origin)
         {
             this.origin = origin;
+        }
+
+        public void SetDepth(int depth)
+        {
+            // this.depth = depth;
         }
 
         public abstract int GetWidth();

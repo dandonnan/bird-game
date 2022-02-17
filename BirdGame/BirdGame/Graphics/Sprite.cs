@@ -18,7 +18,8 @@
         public Sprite(Sprite sprite)
         {
             this.texture = sprite.texture;
-            this.frame = new Frame(frame.Rectangle.X, frame.Rectangle.Y, frame.Rectangle.Width, frame.Rectangle.Height);
+            this.frame = new Frame(sprite.frame.Rectangle.X, sprite.frame.Rectangle.Y,
+                    sprite.frame.Rectangle.Width, sprite.frame.Rectangle.Height);
             this.rotation = sprite.rotation;
             this.scale = sprite.scale;
             this.origin = sprite.origin;
@@ -41,7 +42,7 @@
         public override void Draw()
         {
             WorldManager.SpriteBatch.Draw(texture, position, frame.Rectangle,
-                Color.White, rotation, origin, scale, SpriteEffects.None, 0);
+                Color.White, rotation, origin, scale, SpriteEffects.None, depth);
         }
     }
 }

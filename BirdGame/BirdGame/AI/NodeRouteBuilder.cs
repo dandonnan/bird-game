@@ -22,7 +22,14 @@
 
         public NodeRouteBuilder AddNode(Node newNode)
         {
-            nodes.Last().AddConnection(newNode);
+            Node lastNode = nodes.Last();
+
+            if (lastNode != null)
+            {
+                lastNode.AddConnection(newNode);
+
+                newNode.AddConnection(lastNode);
+            }
 
             nodes.Add(newNode);
 
@@ -31,6 +38,8 @@
 
         public List<Node> End()
         {
+            nodes.Last().AddConnection(nodes.First());
+
             nodes.First().AddConnection(nodes.Last());
 
             return nodes;

@@ -2,6 +2,7 @@
 {
     using BirdGame.Audio;
     using BirdGame.Enums;
+    using BirdGame.Events;
     using BirdGame.Graphics;
     using BirdGame.Input;
     using BirdGame.World;
@@ -9,8 +10,6 @@
     using Microsoft.Xna.Framework.Audio;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection.Metadata.Ecma335;
 
     internal class Bird : AbstractCharacter
     {
@@ -32,8 +31,6 @@
 
         private AnimatedSprite deadSprite;
 
-        private float rotation;
-
         private bool canMove;
 
         private bool flapped;
@@ -44,13 +41,27 @@
 
         private Vector2 targetPosition;
 
+        private bool dead;
+
         public Bird()
         {
+            state = BirdState.Spawning;
+            canMove = false;
+            turningAround = true;
+            targetRotation = 0;
+            targetPosition = new Vector2(200, 0);
+
             flyingSprite = SpriteLibrary.GetAnimatedSprite("BirdFly");
             divingDownSprite = SpriteLibrary.GetAnimatedSprite("BirdDiveDown");
             divingUpSprite = SpriteLibrary.GetAnimatedSprite("BirdDiveUp");
             poopingSprite = SpriteLibrary.GetAnimatedSprite("BirdPoop");
             deadSprite = SpriteLibrary.GetAnimatedSprite("BirdDead");
+
+            flyingSprite.SetDepth(3);
+            divingDownSprite.SetDepth(3);
+            divingUpSprite.SetDepth(3);
+            poopingSprite.SetDepth(3);
+            deadSprite.SetDepth(3);
 
             Reset();
 
@@ -61,19 +72,17 @@
             };
 
             SetOrigin();
-
-            SetPosition(new Vector2(96, 640));
         }
+
+        public BirdState State => state;
 
         public void Reset()
         {
             ResetAllAnimations();
-            state = BirdState.Spawning;
-            canMove = false;
+            dead = false;
             flapped = false;
-            turningAround = true;
-            targetRotation = 0;
-            targetPosition = new Vector2(200, 0);
+            state = BirdState.Flying;
+            SetPosition(new Vector2(96, 640));
         }
 
         public void AllowMovement(bool movement)
@@ -86,6 +95,14 @@
             if (state == BirdState.Spawning)
             {
                 state = BirdState.Flying;
+            }
+        }
+
+        public override void Kill()
+        {
+            if (state == BirdState.Flying || state == BirdState.Pooping)
+            {
+                state = BirdState.Dead;
             }
         }
 
@@ -352,12 +369,18 @@
         {
             poopingSprite.Update(gameTime);
 
-            SwapToStateOnAnimationEnd(poopingSprite, BirdState.Flying, "Poop");
+            SwapToStateOnAnimationEnd(poopingSprite, BirdState.Flying, "Poop", KnownEvents.PoopSpawned);
         }
 
         private void DeadUpdate(GameTime gameTime)
         {
             deadSprite.Update(gameTime);
+
+            if (deadSprite.IsAnimationAtEnd() && dead == false)
+            {
+                dead = true;
+                EventManager.FireEvent(KnownEvents.BirdDead);
+            }
         }
 
         private void ResetAllAnimations()
@@ -375,7 +398,7 @@
             ResetAllAnimations();
         }
 
-        private void SwapToStateOnAnimationEnd(AnimatedSprite sprite, BirdState newState, string soundEffectId = null)
+        private void SwapToStateOnAnimationEnd(AnimatedSprite sprite, BirdState newState, string soundEffectId = null, string eventToTrigger = null)
         {
             if (sprite.IsAnimationAtEnd())
             {
@@ -384,6 +407,11 @@
                 if (string.IsNullOrEmpty(soundEffectId) == false)
                 {
                     AudioManager.PlaySoundEffect(soundEffectId);
+                }
+
+                if (string.IsNullOrEmpty(eventToTrigger) == false)
+                {
+                    EventManager.FireEvent(eventToTrigger);
                 }
             }
         }

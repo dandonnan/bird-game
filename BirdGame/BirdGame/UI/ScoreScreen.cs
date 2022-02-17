@@ -27,9 +27,15 @@
         {
             currentScoreText = currentScore.ToString();
 
+            int screenWidth = MainGame.DefaultWidth;
+
+            highScoreFont = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\NewHighScore");
+            personalBestFont = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\PersonalBest");
+
             if (currentScore > highScore)
             {
                 newHighScoreText = StringLibrary.GetString("NewScore");
+                newHighScorePosition = new Vector2((screenWidth - highScoreFont.MeasureString(newHighScoreText).X) / 2, 50);
             }
 
             if (highScore > 0)
@@ -39,17 +45,11 @@
                 if (personalBestText != null)
                 {
                     personalBestText = string.Format(personalBestText, highScore);
+                    personalBestPosition = new Vector2((screenWidth - personalBestFont.MeasureString(personalBestText).X) / 2, 150);
                 }
             }
 
-            highScoreFont = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\NewHighScore");
-            personalBestFont = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\PersonalBest");
-
-            int screenWidth = MainGame.DefaultWidth;
-
             currentScorePosition = new Vector2((screenWidth - highScoreFont.MeasureString(currentScoreText).X) / 2, 90);
-            newHighScorePosition = new Vector2((screenWidth - highScoreFont.MeasureString(newHighScoreText).X) / 2, 50);
-            personalBestPosition = new Vector2((screenWidth - personalBestFont.MeasureString(personalBestText).X) / 2, 150);
         }
 
         public void Draw()

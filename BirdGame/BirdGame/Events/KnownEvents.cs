@@ -6,9 +6,13 @@
 
         public static string IntroFinished = "IntroFinished";
 
+        public static string PoopSpawned = "PoopSpawned";
+
         public static string PoopLanded = "PoopLanded";
 
         public static string DiveBottom = "DiveBottom";
+
+        public static string BirdDead = "BirdDead";
 
         public static string PointsAwarded = "PointsAwarded";
 

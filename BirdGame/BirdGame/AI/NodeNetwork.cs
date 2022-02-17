@@ -1,7 +1,9 @@
 ﻿namespace BirdGame.AI
 {
     using BirdGame.Enums;
+    using BirdGame.World;
     using Microsoft.Xna.Framework;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -26,11 +28,44 @@
             }
         }
 
+        public static List<Node> GetNodes()
+        {
+            return nodeNetwork.nodes.Values.ToList();
+        }
+
         public static Node FindNode(string id)
         {
             nodeNetwork.nodes.TryGetValue(id, out Node node);
 
             return node;
+        }
+
+        public static List<Node> GetRouteFromSpawnPoint(SpawnPoint spawnPoint)
+        {
+            List<Node> nodes = new List<Node>();
+
+            Node firstNode = FindNode(spawnPoint.Id);
+
+            nodes.Add(firstNode);
+
+            for (int i = 0; i < 20; i++)
+            {
+                Node nextNode = nodes.Last().ConnectedNodes.First();
+
+                if (i > 0)
+                {
+                    Node previousNode = nodes[i - 1];
+
+                    if (nextNode == previousNode)
+                    {
+                        nextNode = nodes.Last().ConnectedNodes.Last();
+                    }
+                }
+
+                nodes.Add(nextNode);
+            }
+
+            return nodes;
         }
 
         private static List<Node> GetOuterNodes()
@@ -100,6 +135,9 @@
             List<Node> innerNodesNorth = MapNodesToWorldPositions(GetInnerNodes(), NodeDirection.North);
             List<Node> innerNodesSouth = MapNodesToWorldPositions(GetInnerNodes(), NodeDirection.South);
 
+            outerNodesSouth.Reverse();
+            innerNodesSouth.Reverse();
+
             List<Node> allNodes = new List<Node>();
             allNodes.AddRange(outerNodesNorth);
             allNodes.AddRange(outerNodesSouth);
@@ -118,7 +156,7 @@
             foreach (Node node in nodes)
             {
                 node.Id += name;
-                node.Position = new Vector2((node.Position.X * multiplier) + offset, node.Position.Y);
+                node.Position = new Vector2(((node.Position.X - 1) * multiplier) + offset, (node.Position.Y - 1) * multiplier);
             }
 
             return nodes;

@@ -1,5 +1,7 @@
 ﻿namespace BirdGame.Events
 {
+    using BirdGame.World;
+    using Microsoft.Xna.Framework;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,6 +53,66 @@
         public static bool EventFired(string eventName)
         {
             return eventManager.events.Any(e => e.Event == eventName);
+        }
+
+        public static bool EventFiredThenKill(string eventName)
+        {
+            bool eventFired = false;
+
+            List<GameEvent> events = eventManager.events.Where(e => e.Event == eventName)
+                                                        .ToList();
+
+            if (events.Any())
+            {
+                eventFired = true;
+
+                foreach (GameEvent gameEvent in events)
+                {
+                    eventManager.events.Remove(gameEvent);
+                }
+            }
+
+            return eventFired;
+        }
+
+        public static bool IsEventFiredInBounds(string eventName, Rectangle bounds, out Poop poop)
+        {
+            bool inBounds = false;
+
+            poop = null;
+
+            GameEvent gameEvent = eventManager.events.FirstOrDefault(e => e.Event == eventName);
+
+            if (gameEvent != null && gameEvent.EventData != null)
+            {
+                try
+                {
+                    Vector2 position;
+
+                    if (gameEvent.EventData.GetType() == typeof(Poop))
+                    {
+                        poop = (Poop)gameEvent.EventData;
+                        position = poop.Position;
+                    }
+                    else
+                    {
+                        position = (Vector2)gameEvent.EventData;
+                    }
+
+                    if (position.X >= bounds.X && position.X <= bounds.X + bounds.Width
+                        && position.Y >= bounds.Y && position.Y <= bounds.Y + bounds.Height)
+                    {
+                        inBounds = true;
+                        eventManager.events.Remove(gameEvent);
+                    }
+                }
+                catch
+                {
+                    // Don't do anything
+                }
+            }
+
+            return inBounds;
         }
 
         public static object GetEventObject(string eventName)

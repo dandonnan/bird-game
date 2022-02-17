@@ -21,12 +21,12 @@
 
         private Vector2 pointsPosition;
 
-        public ScorePopup(Vector2 position, Target target)
+        public ScorePopup(Target target)
         {
-            textPosition = position;
-            pointsPosition = new Vector2(position.X + 50, position.Y - 30);
+            textPosition = new Vector2(MainGame.DefaultWidth / 4, MainGame.DefaultHeight / 4);
+            pointsPosition = new Vector2(textPosition.X + 50, textPosition.Y - 30);
 
-            targetY = position.Y - 20;
+            targetY = textPosition.Y - 100;
 
             font = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\TargetHit");
 
@@ -48,7 +48,7 @@
 
         public void Draw()
         {
-            WorldManager.SpriteBatch.DrawString(font, scoreText, textPosition, Color.White);
+            WorldManager.SpriteBatch.DrawString(font, scoreText, textPosition, Color.CornflowerBlue);
             WorldManager.SpriteBatch.DrawString(font, pointsAwarded, pointsPosition, Color.GreenYellow);
         }
 
