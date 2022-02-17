@@ -82,7 +82,7 @@
             dead = false;
             flapped = false;
             state = BirdState.Flying;
-            SetPosition(new Vector2(96, 640));
+            SetPosition(new Vector2(-10, 640));
         }
 
         public void AllowMovement(bool movement)

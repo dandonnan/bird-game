@@ -83,6 +83,12 @@
             itemSprite.SetPosition(position);
         }
 
+        public void SetRotation(float rotation)
+        {
+            itemWithPoopSprite.SetRotation(rotation);
+            itemSprite.SetRotation(rotation);
+        }
+
         public void Draw()
         {
             if (hasPoop)
@@ -113,7 +119,15 @@
                     itemSprite = SpriteLibrary.GetSprite("IceCream");
                     itemWithPoopSprite = SpriteLibrary.GetSprite("IceCreamPoop");
                     break;
+
+                default:
+                    break;
             }
+
+            Vector2 origin = new Vector2(6, 8);
+
+            itemSprite.SetOrigin(origin);
+            itemWithPoopSprite.SetOrigin(origin);
         }
     }
 }

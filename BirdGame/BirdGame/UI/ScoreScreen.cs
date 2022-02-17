@@ -1,5 +1,6 @@
 ﻿namespace BirdGame.UI
 {
+    using BirdGame.Graphics;
     using BirdGame.Text;
     using BirdGame.World;
     using Microsoft.Xna.Framework;
@@ -23,8 +24,14 @@
 
         private readonly Vector2 personalBestPosition;
 
+        private readonly Sprite background;
+
         public ScoreScreen(int currentScore, int highScore)
         {
+            background = SpriteLibrary.GetSprite("UiBackground");
+            background.SetPosition(new Vector2(-32, -32));
+            background.SetScale(25);
+
             currentScoreText = currentScore.ToString();
 
             int screenWidth = MainGame.DefaultWidth;
@@ -54,6 +61,8 @@
 
         public void Draw()
         {
+            background.Draw();
+
             if (string.IsNullOrEmpty(newHighScoreText) == false)
             {
                 WorldManager.SpriteBatch.DrawString(highScoreFont, newHighScoreText, newHighScorePosition, Color.White);

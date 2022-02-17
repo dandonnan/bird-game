@@ -40,11 +40,21 @@
             return node;
         }
 
+        public static List<Node> GetRouteFromNode(Node node)
+        {
+            return GetRouteFromId(node.Id);
+        }
+
         public static List<Node> GetRouteFromSpawnPoint(SpawnPoint spawnPoint)
+        {
+            return GetRouteFromId(spawnPoint.Id);
+        }
+
+        private static List<Node> GetRouteFromId(string id)
         {
             List<Node> nodes = new List<Node>();
 
-            Node firstNode = FindNode(spawnPoint.Id);
+            Node firstNode = FindNode(id);
 
             nodes.Add(firstNode);
 

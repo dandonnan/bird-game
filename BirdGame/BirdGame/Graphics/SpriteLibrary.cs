@@ -66,132 +66,133 @@
                 { "Pavement", new Sprite(objectsTexture, new Frame(100, 1, 32)) },
                 { "Road", new Sprite(objectsTexture, new Frame(133, 1, 32)) },
                 { "Brick", new Sprite(objectsTexture, new Frame(166, 1, 32)) },
-                { "Coffee", new Sprite(objectsTexture, new Frame(403, 1, 4)) },
-                { "CoffeePoop", new Sprite(objectsTexture, new Frame(408, 1, 4)) },
-                { "Chips", new Sprite(objectsTexture, new Frame(403, 6, 4)) },
-                { "ChipsPoop", new Sprite(objectsTexture, new Frame(408, 6, 4)) },
-                { "IceCream", new Sprite(objectsTexture, new Frame(403, 11, 4)) },
-                { "IceCreamPoop", new Sprite(objectsTexture, new Frame(408, 11, 4)) },
+                { "Coffee", new Sprite(objectsTexture, new Frame(207, 111, 4)) },
+                { "CoffeePoop", new Sprite(objectsTexture, new Frame(212, 111, 4)) },
+                { "Chips", new Sprite(objectsTexture, new Frame(207, 116, 4)) },
+                { "ChipsPoop", new Sprite(objectsTexture, new Frame(212, 116, 4)) },
+                { "IceCream", new Sprite(objectsTexture, new Frame(207, 116, 4)) },
+                { "IceCreamPoop", new Sprite(objectsTexture, new Frame(212, 116, 4)) },
                 { "StainPoop", new Sprite(objectsTexture, new Frame(201, 65, 3)) },
                 { "Car", new Sprite(objectsTexture, new Frame(1, 65, 44)) },
+                { "UiBackground", new Sprite(objectsTexture, new Frame(50, 65, 16)) },
                 {
                     "NPC1",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(199, 1, 16),
-                        new Frame(216, 1, 16),
-                        new Frame(199, 1, 16),
-                        new Frame(233, 1, 16),
+                        new Frame(3, 111, 16),
+                        new Frame(20, 111, 16),
+                        new Frame(3, 111, 16),
+                        new Frame(37, 111, 16),
                     })
                 },
                 {
                     "NPC1_Carry",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(199, 1, 16),
-                        new Frame(216, 1, 16),
-                        new Frame(199, 1, 16),
-                        new Frame(250, 1, 16),
+                        new Frame(3, 111, 16),
+                        new Frame(20, 111, 16),
+                        new Frame(3, 111, 16),
+                        new Frame(54, 111, 16),
                     })
                 },
                 {
                     "NPC2",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(267, 1, 16),
-                        new Frame(284, 1, 16),
-                        new Frame(267, 1, 16),
-                        new Frame(301, 1, 16),
+                        new Frame(71, 111, 16),
+                        new Frame(88, 111, 16),
+                        new Frame(71, 111, 16),
+                        new Frame(105, 111, 16),
                     })
                 },
                 {
                     "NPC2_Carry",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(267, 1, 16),
-                        new Frame(284, 1, 16),
-                        new Frame(267, 1, 16),
-                        new Frame(318, 1, 16),
+                        new Frame(71, 111, 16),
+                        new Frame(88, 111, 16),
+                        new Frame(71, 111, 16),
+                        new Frame(122, 111, 16),
                     })
                 },
                 {
                     "NPC3",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(335, 1, 16),
-                        new Frame(352, 1, 16),
-                        new Frame(335, 1, 16),
-                        new Frame(369, 1, 16),
+                        new Frame(139, 111, 16),
+                        new Frame(156, 111, 16),
+                        new Frame(139, 111, 16),
+                        new Frame(173, 111, 16),
                     })
                 },
                 {
                     "NPC3_Carry",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(335, 1, 16),
-                        new Frame(352, 1, 16),
-                        new Frame(335, 1, 16),
-                        new Frame(386, 1, 16),
+                        new Frame(139, 111, 16),
+                        new Frame(156, 111, 16),
+                        new Frame(139, 111, 16),
+                        new Frame(190, 111, 16),
                     })
                 },
                 {
                     "NPC4",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(199, 18, 16),
-                        new Frame(216, 18, 16),
-                        new Frame(199, 18, 16),
-                        new Frame(233, 18, 16),
+                        new Frame(3, 128, 16),
+                        new Frame(20, 128, 16),
+                        new Frame(3, 128, 16),
+                        new Frame(37, 128, 16),
                     })
                 },
                 {
                     "NPC4_Carry",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(199, 18, 16),
-                        new Frame(216, 18, 16),
-                        new Frame(199, 18, 16),
-                        new Frame(250, 18, 16),
+                        new Frame(3, 128, 16),
+                        new Frame(20, 128, 16),
+                        new Frame(3, 128, 16),
+                        new Frame(54, 128, 16),
                     })
                 },
                 {
                     "NPC5",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(267, 18, 16),
-                        new Frame(284, 18, 16),
-                        new Frame(267, 18, 16),
-                        new Frame(301, 18, 16),
+                        new Frame(71, 128, 16),
+                        new Frame(89, 128, 16),
+                        new Frame(71, 128, 16),
+                        new Frame(105, 128, 16),
                     })
                 },
                 {
                     "NPC5_Carry",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(267, 18, 16),
-                        new Frame(284, 18, 16),
-                        new Frame(267, 18, 16),
-                        new Frame(318, 18, 16),
+                        new Frame(71, 128, 16),
+                        new Frame(89, 128, 16),
+                        new Frame(71, 128, 16),
+                        new Frame(122, 128, 16),
                     })
                 },
                 {
                     "NPC6",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(335, 18, 16),
-                        new Frame(352, 18, 16),
-                        new Frame(335, 18, 16),
-                        new Frame(369, 18, 16),
+                        new Frame(139, 128, 16),
+                        new Frame(156, 128, 16),
+                        new Frame(139, 128, 16),
+                        new Frame(173, 128, 16),
                     })
                 },
                 {
                     "NPC6_Carry",
                     new AnimatedSprite(objectsTexture, new List<Frame>
                     {
-                        new Frame(335, 18, 16),
-                        new Frame(352, 18, 16),
-                        new Frame(335, 18, 16),
-                        new Frame(386, 18, 16),
+                        new Frame(139, 128, 16),
+                        new Frame(156, 128, 16),
+                        new Frame(139, 128, 16),
+                        new Frame(190, 128, 16),
                     })
                 },
                 {

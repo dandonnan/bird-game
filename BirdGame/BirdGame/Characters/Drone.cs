@@ -96,6 +96,10 @@
             {
                 onScreen = true;
                 AudioManager.PlaySoundEffect("DroneEnter");
+            }
+
+            if (onScreen && inCameraBounds && AudioManager.IsLoopingSoundPlaying("DroneFly") == false)
+            {
                 AudioManager.PlayLoopingSoundEffect("DroneFly");
             }
         }

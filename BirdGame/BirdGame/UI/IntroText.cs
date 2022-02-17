@@ -1,6 +1,5 @@
 ﻿namespace BirdGame.UI
 {
-    using BirdGame.Data;
     using BirdGame.Events;
     using BirdGame.Input;
     using BirdGame.Text;
@@ -14,19 +13,11 @@
 
         private const float titleFinalPositionY = -50;
 
-        private const float copyrightFinalPositionY = 300;
-
         private readonly SpriteFont titleFont;
-
-        private readonly SpriteFont copyrightFont;
 
         private string gameTitle;
 
-        private string copyright;
-
         private Vector2 titlePosition;
-
-        private Vector2 copyrightPosition;
 
         private bool transitionOut = false;
 
@@ -35,7 +26,6 @@
         public IntroText()
         {
             titleFont = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\GameTitle");
-            copyrightFont = WorldManager.ContentManager.Load<SpriteFont>("Fonts\\PersonalBest");
 
             Reset();
         }
@@ -43,12 +33,10 @@
         public void Reset()
         {
             gameTitle = StringLibrary.GetString("GameTitle");
-            copyright = StringLibrary.GetString("Copyright");
 
             int screenWidth = MainGame.DefaultWidth;
 
             titlePosition = new Vector2((screenWidth - titleFont.MeasureString(gameTitle).X) / 2, 10);
-            copyrightPosition = new Vector2((screenWidth - copyrightFont.MeasureString(copyright).X) / 2, 200);
         }
 
         public void BeginTransitionOut()
@@ -82,30 +70,16 @@
             if (finished == false)
             {
                 WorldManager.SpriteBatch.DrawString(titleFont, gameTitle, titlePosition, Color.White);
-                WorldManager.SpriteBatch.DrawString(copyrightFont, copyright, copyrightPosition, Color.CornflowerBlue);
             }
         }
 
         private void TransitionOut()
         {
-            bool textAtEnd = false;
-
             if (titlePosition.Y > titleFinalPositionY)
             {
                 titlePosition.Y -= textMoveSpeed;
             }
             else
-            {
-                textAtEnd = true;
-            }
-
-            if (copyrightPosition.Y < copyrightFinalPositionY)
-            {
-                copyrightPosition.Y += textMoveSpeed;
-                textAtEnd = false;
-            }
-
-            if (textAtEnd)
             {
                 finished = true;
                 EventManager.FireEvent(KnownEvents.IntroFinished);

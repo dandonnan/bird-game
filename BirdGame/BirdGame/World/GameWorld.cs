@@ -28,6 +28,8 @@
 
         private readonly List<AbstractCharacter> characters;
 
+        private readonly List<Drone> drones;
+
         private readonly List<Poop> poops;
 
         private readonly PauseScreen pauseScreen;
@@ -59,6 +61,8 @@
 
             characters = new List<AbstractCharacter>();
 
+            drones = new List<Drone>();
+
             poops = new List<Poop>();
 
             bird = new Bird();
@@ -69,7 +73,7 @@
 
             town = WorldManager.ContentManager.Load<Texture2D>("Sprites\\town");
 
-            townPosition = new Vector2(-128, -128);
+            townPosition = new Vector2(-512, -512);
 
             AudioManager.PlayLoopingSoundEffect("Ambience");
 
@@ -151,6 +155,7 @@
             bird.Reset();
             characters.ForEach(c => c.Kill());
             characters.Clear();
+            drones.Clear();
             poops.Clear();
             scoreCounter.Reset();
             AudioManager.StopLoopingSoundEffect("DroneFly");
@@ -246,10 +251,16 @@
 
                 if (character.MinLifetime > 0 && character.Lifetime > character.MinLifetime
                     && camera.CharacterInCameraBounds(character) == false
-                    && Vector2.Distance(character.Position, bird.Position) > 300)
+                    && Vector2.Distance(character.Position, bird.Position) > 100)
                 {
                     charactersToRemove.Add(character);
                 }
+            }
+
+            foreach (Drone drone in drones)
+            {
+                drone.Update(gameTime);
+
             }
 
             foreach (Poop poop in poops)
@@ -349,7 +360,7 @@
                     if (camera.SpawnPointInCameraBounds(availableSpawns[index]) == false)
                     {
                         availableSpawns[index].Occupy();
-                        characters.Add(new Drone(availableSpawns[index]));
+                        drones.Add(new Drone(availableSpawns[index]));
                         dronesActive++;
                     }
                 }
@@ -407,6 +418,11 @@
             foreach (Poop poop in poops)
             {
                 poop.Draw();
+            }
+
+            foreach (Drone drone in drones)
+            {
+                drone.Draw();
             }
         }
 

@@ -3,19 +3,27 @@
     using BirdGame.Audio;
     using BirdGame.Data;
     using BirdGame.Events;
+    using BirdGame.Graphics;
     using BirdGame.Input;
     using BirdGame.Text;
     using BirdGame.World;
+    using Microsoft.Xna.Framework;
     using System.Collections.Generic;
 
     internal class PauseScreen
     {
+        private readonly Sprite background;
+
         private List<MenuOption> options;
 
         private int currentOption;
 
         public PauseScreen()
         {
+            background = SpriteLibrary.GetSprite("UiBackground");
+            background.SetPosition(new Vector2(-32, -32));
+            background.SetScale(25);
+
             Reset();
         }
 
@@ -58,6 +66,8 @@
 
         public void Draw()
         {
+            background.Draw();
+
             for (int i = 0; i < options.Count; i++)
             {
                 if (currentOption == i)

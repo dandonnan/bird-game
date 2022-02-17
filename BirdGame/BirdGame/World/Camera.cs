@@ -112,14 +112,14 @@
         {
             bool inBounds = true;
 
-            if (spawnPoint.Position.X + 50 < position.X - origin.X ||
-                spawnPoint.Position.X - 50 > position.X + origin.X)
+            if (spawnPoint.Position.X + 30 < position.X - (origin.X / scaleX) ||
+                spawnPoint.Position.X - 30 > position.X + (origin.X / scaleX))
             {
                 inBounds = false;
             }
 
-            if (spawnPoint.Position.Y + 50 < position.Y - origin.Y ||
-                spawnPoint.Position.Y - 50 > position.Y + origin.Y)
+            if (spawnPoint.Position.Y + 30 < position.Y - (origin.Y / scaleY) ||
+                spawnPoint.Position.Y - 30 > position.Y + (origin.Y / scaleY))
             {
                 inBounds = false;
             }

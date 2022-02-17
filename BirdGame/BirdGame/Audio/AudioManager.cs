@@ -55,6 +55,11 @@
             }
         }
 
+        public static bool IsLoopingSoundPlaying(string id)
+        {
+            return audioManager.loopingSounds.ContainsKey(id);
+        }
+
         public static void StopLoopingSoundEffect(string id)
         {
             audioManager.loopingSounds.TryGetValue(id, out SoundEffectInstance instance);

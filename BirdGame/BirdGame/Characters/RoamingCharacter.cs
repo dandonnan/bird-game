@@ -20,7 +20,7 @@
 
         private readonly HeldItem heldItem;
 
-        private readonly List<Node> nodes;
+        private List<Node> nodes;
 
         private int currentNode;
 
@@ -151,6 +151,12 @@
             if (currentNode < nodes.Count - 1 && InRangeOfNode())
             {
                 currentNode++;
+
+                if (currentNode >= nodes.Count - 1)
+                {
+                    currentNode = 0;
+                    nodes = NodeNetwork.GetRouteFromNode(nodes[currentNode]);
+                }
             }
 
             Vector2 direction = nodes[currentNode].Position - position;
@@ -163,6 +169,7 @@
             if (hasItem)
             {
                 heldItem.SetPosition(position);
+                heldItem.SetRotation(rotation);
                 walkWithItemSprite.SetPosition(position);
                 walkWithItemSprite.SetRotation(rotation);
             }
@@ -192,7 +199,7 @@
         {
             if (hasItem)
             {
-                heldItemBounds = new Rectangle((int)position.X, (int)position.Y, 4, 4);
+                heldItemBounds = new Rectangle((int)position.X, (int)position.Y, 8, 8);
             }
 
             headBounds = new Rectangle((int)(position.X + (GetWidth() / 2)) - 4, (int)(position.Y + (GetHeight() / 2)) - 4, 8, 8);
