@@ -193,10 +193,10 @@
 
                 // If the bird is diving and in the bounds of the character
                 if (WorldManager.GameWorld.Bird.State == BirdState.DivingUp
-                    && position.X > WorldManager.GameWorld.Bird.Position.X
-                    && position.X < WorldManager.GameWorld.Bird.Position.X + GetWidth()
-                    && position.Y > WorldManager.GameWorld.Bird.Position.Y
-                    && position.Y < WorldManager.GameWorld.Bird.Position.Y + GetHeight())
+                    && position.X + 8 > WorldManager.GameWorld.Bird.Position.X
+                    && position.X - 8 < WorldManager.GameWorld.Bird.Position.X + GetWidth()
+                    && position.Y + 8 > WorldManager.GameWorld.Bird.Position.Y
+                    && position.Y - 8 < WorldManager.GameWorld.Bird.Position.Y + GetHeight())
                 {
                     // Take the item off the character
                     hasItem = false;

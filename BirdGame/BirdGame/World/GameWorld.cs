@@ -242,19 +242,17 @@
         /// </summary>
         private void Reset()
         {
-            // Reset the camera and bird
-            camera.Reset();
-            bird.Reset();
-
-            // Kill all the characters
-            characters.ForEach(c => c.Kill());
-
             // Clear the lists
             characters.Clear();
             drones.Clear();
             poops.Clear();
 
-            scoreCounter.Reset();
+            // Reset the camera and bird
+            camera.Reset();
+            bird.Reset(true);
+
+            // Kill all the characters
+            characters.ForEach(c => c.Kill());
 
             // Stop the looping sound for drones
             AudioManager.StopLoopingSoundEffect("DroneFly");
@@ -268,6 +266,8 @@
             // Reset the number of drones
             maxDronesAllowed = 0;
             dronesActive = 0;
+
+            scoreCounter.Reset();
         }
 
         /// <summary>

@@ -102,8 +102,6 @@
             state = BirdState.Spawning;
             canMove = false;
             turningAround = true;
-            targetRotation = 0;
-            targetPosition = new Vector2(200, 0);
 
             // Set the sprites by getting them from the library
             flyingSprite = SpriteLibrary.GetAnimatedSprite("BirdFly");
@@ -133,13 +131,26 @@
         /// <summary>
         /// Reset variables when the bird has died.
         /// </summary>
-        public void Reset()
+        public void Reset(bool playedBefore = false)
         {
+            state = BirdState.Spawning;
             ResetAllAnimations();
-            dead = false;
             flapped = false;
-            state = BirdState.Flying;
             SetPosition(new Vector2(-10, 640));
+            SetRotation(0);
+            targetRotation = 0;
+
+            if (playedBefore == false)
+            {
+                targetPosition = new Vector2(200, 0);
+            }
+            else
+            {
+                SetPosition(new Vector2(200, 640));
+                AllowControl();
+            }
+
+            dead = false;
         }
 
         /// <summary>
