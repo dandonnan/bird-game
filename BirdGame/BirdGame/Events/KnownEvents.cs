@@ -1,5 +1,8 @@
 ﻿namespace BirdGame.Events
 {
+    /// <summary>
+    /// Known events that can be fired.
+    /// </summary>
     internal class KnownEvents
     {
         public static string SpawnBird = "SpawnBird";

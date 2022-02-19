@@ -2,21 +2,41 @@
 {
     using System.IO;
 
+    /// <summary>
+    /// A save manager.
+    /// </summary>
     internal class SaveManager
     {
+        /// <summary>
+        /// The save data file.
+        /// </summary>
         private const string Filename = "wings";
 
+        /// <summary>
+        /// A singleton for the save manager, so there is only ever one instance.
+        /// </summary>
         private static SaveManager saveManager;
 
+        /// <summary>
+        /// The save data.
+        /// </summary>
         private SaveData saveData;
 
+        /// <summary>
+        /// A private constructor, so the manager can only be created through
+        /// the Initialise method.
+        /// </summary>
         private SaveManager()
         {
             saveManager = this;
 
+            // Load the data
             Load();
         }
 
+        /// <summary>
+        /// Initialise the save manager.
+        /// </summary>
         public static void Initialise()
         {
             if (saveManager == null)
@@ -25,12 +45,19 @@
             }
         }
 
+        /// <summary>
+        /// Get the save data.
+        /// </summary>
         public static SaveData SaveData => saveManager.saveData;
 
+        /// <summary>
+        /// Save the data.
+        /// </summary>
         public static void Save()
         {
             try
             {
+                // Open the file and write the data to it
                 using (StreamWriter streamWriter = new StreamWriter(Filename))
                 {
                     streamWriter.WriteLine(SaveData.HighScore);
@@ -47,14 +74,19 @@
             }
         }
 
+        /// <summary>
+        /// Load the data.
+        /// </summary>
         public static void Load()
         {
+            // If the file exists
             if (File.Exists(Filename))
             {
                 try
                 {
                     SaveData saveData = new SaveData();
 
+                    // Open the file, read the data and set it against the save data
                     using (StreamReader streamReader = new StreamReader(Filename))
                     {
                         string firstLine = streamReader.ReadLine();
@@ -89,6 +121,7 @@
             }
             else
             {
+                // Default the save data
                 saveManager.saveData = new SaveData();
             }
         }

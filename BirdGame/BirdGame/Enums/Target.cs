@@ -1,5 +1,8 @@
 ﻿namespace BirdGame.Enums
 {
+    /// <summary>
+    /// Targets for the bird to attack.
+    /// </summary>
     internal enum Target
     {
         PoopHead,
